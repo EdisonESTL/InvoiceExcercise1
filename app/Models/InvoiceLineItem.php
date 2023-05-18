@@ -4,8 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class InvoiceLineItem extends Model
 {
     use HasFactory;
+
+    //inverse relation
+    public function invoice(): BelongsTo
+    {
+        return $this->BelongsTo(Invoice::class);
+    }
+
+    //relation with State
+    public function state(): HasOne
+    {
+        return $this->hasOne(State::class);
+    }
+
+    //relation with Product
+    public function product(): HasOne
+    {
+        return $this->hasOne(Product::class);
+    }
+
+    //relation with Service
+    public function service(): HasOne
+    {
+        return $this->hasOne(Service::class);
+    }
 }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('invoice_line_items', function (Blueprint $table) {
             $table->id();
+            $table->integer('quantity');
+            $table->decimal('unit_price', $precision = 8, $scale = 2);
+            $table->decimal('total_price', $precision = 8, $scale = 2);
             $table->timestamps();
         });
     }
