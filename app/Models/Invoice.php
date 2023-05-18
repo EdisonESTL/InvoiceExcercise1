@@ -11,9 +11,15 @@ class Invoice extends Model
 {
     use HasFactory;
 
-    public function invoicelineitem(): HasMany
+    protected $fillable = [
+        'name',
+        'user_id',
+        'invoice_date'
+    ];
+
+    public function invoiceLineItems(): HasMany
     {
-        return $this->hasMany(invoicelineitem::class);
+        return $this->hasMany(Invoicelineitem::class);
     }
 
     public function user(): BelongsTo
