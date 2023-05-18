@@ -32,7 +32,32 @@ class InvoiceController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
+        $invoice = Invoice::create([
+            'name' => $request->name,
+            'invoice_date' => $request->date
+        ]);
+
+        //Guarda en tablas relacionadas
+        foreach($request->items as $item) {
+            /*[
+                'product_id' => 1,
+                'service_id' => 1,
+                'unit_price' => 10,
+                'total_price' => 100,
+                'quantity' => 10
+            ];
+            $table->integer('quantity');
+            $table->foreignId('invoice_id');
+            $table->foreignId('product_id');
+            $table->foreignId('service_id');
+            $table->foreignId('state_id');
+            $table->decimal('unit_price', $precision = 8, $scale = 2);
+            $table->decimal('total_price', $precision = 8, $scale = 2);*/
+            $invoice->invoiceLineItems()->create($item);    
+        }
         
+
+        return redirect(route('invoice.index'));
     }
 
     /**

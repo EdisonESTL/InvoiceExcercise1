@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -10,9 +12,10 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         //
+        return view('service.index');
     }
 
     /**
@@ -26,9 +29,16 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //
+        $service = Service::create([
+            'name_service' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price
+        ]);
+
+        return redirect(route('service.index'));
     }
 
     /**

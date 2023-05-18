@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('invoice_line_items', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
+            $table->foreignId('invoice_id');
+            $table->foreignId('product_id');
+            $table->foreignId('service_id');
+            $table->foreignId('state_id');
             $table->decimal('unit_price', $precision = 8, $scale = 2);
             $table->decimal('total_price', $precision = 8, $scale = 2);
             $table->timestamps();

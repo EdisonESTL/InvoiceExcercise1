@@ -10,6 +10,12 @@ class Service extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name_service',
+        'description',
+        'price'
+    ];
+    
     //relation inverse
     public function invoicelineitem(): BelongsTo
     {
