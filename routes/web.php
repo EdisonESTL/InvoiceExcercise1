@@ -32,11 +32,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('invoice', InvoiceController::class)
-    ->only(['index','store'])
+    ->only(['index','store', 'edit', 'update', 'destroy'])
     ->middleware('auth','verified');
 
 Route::resource('product', ProductController::class)
-    ->only(['index','store'])
+    ->only(['index','store', 'edit', 'update', 'destroy'])
     ->middleware('auth','verified');
 
 Route::resource('service', ServiceController::class)
