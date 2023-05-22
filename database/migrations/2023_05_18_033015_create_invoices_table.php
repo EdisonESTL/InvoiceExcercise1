@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('state_id');
             $table->dateTime('invoice_date', $precision = 0) ;
+            $table->integer('total');
             $table->timestamps();
         });
     }

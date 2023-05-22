@@ -17,12 +17,6 @@ class InvoiceLineItem extends Model
         return $this->BelongsTo(Invoice::class);
     }
 
-    //relation with State
-    public function state(): HasOne
-    {
-        return $this->hasOne(State::class);
-    }
-
     //relation with Product
     public function product(): HasOne
     {

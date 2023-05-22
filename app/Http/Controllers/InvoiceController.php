@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Models\Invoice;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -15,7 +16,10 @@ class InvoiceController extends Controller
     public function index():View
     {
         //return invoice view
-        return view('invoice.index');
+        
+        return view('invoice.index', [
+            'products' => Product::All(),
+        ]);
     }
 
     /**
