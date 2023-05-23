@@ -104,4 +104,11 @@ class ProductController extends Controller
         $prod = Product::find($product->id)->delete();
         return redirect(route('product.index'));
     }
+
+    /**
+     * fill fields of the selected product
+     */
+    public function fillFields(){
+        $objectId = 
+    }
 }

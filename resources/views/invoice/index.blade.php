@@ -190,7 +190,7 @@
                     </tr>
                     <tbody>
                         <tr>
-                            <td><select id="selectProduct" name="selectProduct">
+                            <td><select id="selectProduct" name="selectProduct" onchange="">
                                 @foreach($products as $product)
                                 <option value={{$product->id}}>{{$product->name}}</option>
                                 @endforeach
