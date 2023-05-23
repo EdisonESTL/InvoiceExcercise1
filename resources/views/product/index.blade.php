@@ -32,6 +32,7 @@
                     type="number" 
                     name="price" 
                     :value="old('price')" 
+                    step="0.01" min="1"
                     required/>
                 <x-input-error :messages="$errors->get('productPrice')" class="mt-2" />
                 

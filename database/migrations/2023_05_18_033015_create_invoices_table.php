@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreignId('state_id');
             $table->dateTime('invoice_date', $precision = 0) ;
-            $table->integer('total');
+            $table->decimal('total', $precision = 8, $scale = 2);
             $table->timestamps();
         });
     }

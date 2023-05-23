@@ -190,17 +190,17 @@
                     </tr>
                     <tbody>
                         <tr>
-                            <td><select id="selectProduct" name="selectProduct" onchange="">
+                            <td><select id="selectProduct" onchange="test(event)">
+                                <option value=0>select an option</option>
                                 @foreach($products as $product)
                                 <option value={{$product->id}}>{{$product->name}}</option>
                                 @endforeach
                             </select>
                             </td>
-                            <td><x-text-input id="description" 
+                            <td><x-text-input id="description" onchange=""
                                 class="block mt-1 w-full" 
-                                type="text" 
-                                name="description" 
-                                :value="old('description')"
+                                type="text"  
+                                :value="old('description', )"
                                 
                                 /></td>
                             <td><x-text-input id="quantity" 
@@ -260,3 +260,66 @@
         
     </div>
 </x-app-layout>
+
+<script>
+async function test(data) {
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+    const response = await fetch('productDataFilling',{
+            method: 'POST',
+            body: JSON.stringify({id : data.target.value}),
+            headers:{
+                'Content-Type': 'application/json',
+                "X-CSRF-Token": csrf
+            }
+        }).catch((err) => {
+                
+        });
+    
+    if(response.ok){
+        const jsonData = await response.json()
+        const dataProducts=jsonData.productDetails;
+
+        document.getElementById('description').value = dataProducts.description;
+        document.getElementById('price').value = dataProducts.price;
+
+        console.log(jsonData.productDetails)
+    }
+    
+}
+
+function totalPayablePerProduct(data){
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+    
+    const response = await fetch('productDataFilling',{
+            method: 'POST',
+            body: JSON.stringify({id : data.target.value}),
+            headers:{
+                'Content-Type': 'application/json',
+                "X-CSRF-Token": csrf
+            }
+        }).catch((err) => {
+                
+        });
+}
+/*
+    async function load(data) {
+        var csrf = document.querySelector('meta[name="csrf-token"]').content;
+        const selectElement = await fetch('productDataFilling',{
+                methos: 'POST',
+                body: JSON.stringify({id : data.target.value}),
+                headers:{
+                    'Content-Type': 'application/json',
+                    "X-CSRF-Token": csrf
+                }
+            }).then(response => {
+                //console.log(response)
+                //response.json()
+                const jsonData = await response.json(),
+                console.log(jsonData.productDetails)
+            }).catch((err) => {
+                
+            });
+    }
+*/
+   
+</script>

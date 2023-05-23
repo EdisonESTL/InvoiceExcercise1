@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->foreignId('service_id');
             $table->foreignId('state_id');
-            $table->decimal('unit_price', $precision = 8, $scale = 2);
-            $table->decimal('total_price', $precision = 8, $scale = 2);
+            $table->double('unit_price', 8, 2);
+            $table->double('total_price', 8, 2);
             $table->timestamps();
         });
     }

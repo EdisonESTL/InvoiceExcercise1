@@ -105,10 +105,5 @@ class ProductController extends Controller
         return redirect(route('product.index'));
     }
 
-    /**
-     * fill fields of the selected product
-     */
-    public function fillFields(){
-        $objectId = 
-    }
+    
 }

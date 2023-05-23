@@ -95,4 +95,25 @@ class InvoiceController extends Controller
     {
         //
     }
+    
+    /**
+     * product data filling in invoice items
+     */
+    public function productDataFilling(Request $request){
+        if(isset($request->id)){
+            $productDetail = Product::find($request->id);
+            return response()->json(
+                [
+                    'productDetails' => $productDetail,
+                    'success' => true
+                ]
+                );
+        }  else{
+            return response()->json(
+                [
+                    'success' => false
+                ]
+                );
+        }
+    }
 }
