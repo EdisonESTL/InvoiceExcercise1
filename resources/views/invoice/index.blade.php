@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+    <div class="max-w-2/6 mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
         <div class="content-center basis-4/5">
             <x-input-label :value="__('Facturar')" class="text-3xl text-center"></x-input-label>
             <div class="w-44">
@@ -178,6 +178,23 @@
                     <x-input-error :messages="$errors->get('priceTotal')" class="mt-2" />
                 </div>
             </div>-->
+            <form method="POST" action="">
+                @csrf
+                <select id="selectProduct" onchange="test(event)"
+                    name="selectProduct">
+                    <option value=0>select an option</option>
+                    @foreach($products as $product)
+                    <option value={{$product->id}}>{{$product->name}}</option>
+                    @endforeach
+                </select>
+                <td><x-text-input id="quantity" onchange="totalPayablePerProduct()"
+                    class="block mt-1 w-full" 
+                    type="number" 
+                    name="quantity" 
+                    :value="old('quantity')"/></td>
+                <x-primary-button class="mt-4">{{ __('Add') }}</x-primary-button>
+                
+            </form>
             <table class="col-span-2 table-auto">
                 <thead>
                     <tr>
@@ -189,21 +206,23 @@
                         <th>Acciones</th>
                     </tr>
                     <tbody>
+                        @foreach ($collectionItem as $item)
                         <tr>
-                            <td><select id="selectProduct" onchange="test(event)">
-                                <option value=0>select an option</option>
-                                @foreach($products as $product)
-                                <option value={{$product->id}}>{{$product->name}}</option>
-                                @endforeach
-                            </select>
-                            </td>
-                            <td><x-text-input id="description" onchange=""
+                            <td>
+                                <x-text-input id="name"
                                 class="block mt-1 w-full" 
                                 type="text"  
-                                :value="old('description', )"
+                                :value="old('description')"
+                                
+                                />
+                            </td>
+                            <td><x-text-input id="description"
+                                class="block mt-1 w-full" 
+                                type="text"  
+                                :value="old('description')"
                                 
                                 /></td>
-                            <td><x-text-input id="quantity" 
+                            <td><x-text-input id="quantity" onchange="totalPayablePerProduct()"
                                 class="block mt-1 w-full" 
                                 type="number" 
                                 name="quantity" 
@@ -223,6 +242,7 @@
                             <datalist  id="productList" dir="{{$products}}"></datalist>
 
                           </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -262,6 +282,8 @@
 </x-app-layout>
 
 <script>
+//const jsonDataProducts;
+
 async function test(data) {
     var csrf = document.querySelector('meta[name="csrf-token"]').content;
     const response = await fetch('productDataFilling',{
@@ -277,29 +299,35 @@ async function test(data) {
     
     if(response.ok){
         const jsonData = await response.json()
-        const dataProducts=jsonData.productDetails;
+        const dataProduct=jsonData.productDetails;
+        //jsonDataProducts=jsonData.productDetails;
 
-        document.getElementById('description').value = dataProducts.description;
-        document.getElementById('price').value = dataProducts.price;
+        document.getElementById('description').value = jsonData.productDetails.description;
+        document.getElementById('price').value = dataProduct.price;
 
         console.log(jsonData.productDetails)
     }
     
 }
 
-function totalPayablePerProduct(data){
-    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+async function totalPayablePerProduct(){
+    const quantity = document.getElementById('quantity').value;
+    const priceUnit = document.getElementById('price').value;
+
+    document.getElementById('totalValue').value = quantity*priceUnit;
+    /*var csrf = document.querySelector('meta[name="csrf-token"]').content;
     
     const response = await fetch('productDataFilling',{
             method: 'POST',
-            body: JSON.stringify({id : data.target.value}),
+            body: JSON.stringify({quantity : data.target.value}),
             headers:{
                 'Content-Type': 'application/json',
                 "X-CSRF-Token": csrf
             }
         }).catch((err) => {
                 
-        });
+        });*/
+    
 }
 /*
     async function load(data) {

@@ -46,6 +46,11 @@ Route::resource('service', ServiceController::class)
 Route::post('productDataFilling', [InvoiceController::class, 'productDataFilling'])
     ->middleware('auth','verified');
 
-Route::post('CalculateTotalProduct', [InvoiceController::class, 'CalculateTotalProduct'])
+/*Route::resource('addItemInvoice', InvoiceController::class)
+    ->only(['index','store'])
+    ->middleware('auth','verified');*/
+
+Route::post('addItemInvoice', [InvoiceController::class, 'addItemInvoice'])
     ->middleware('auth','verified');
+
 require __DIR__.'/auth.php';

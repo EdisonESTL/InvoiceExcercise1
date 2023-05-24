@@ -80,7 +80,7 @@ class ProductController extends Controller
 
         
         $prod = Product::where('id',$request->id)->first();
-        $prod2 = $product->update([
+        $product->update([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,

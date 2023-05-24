@@ -116,4 +116,15 @@ class InvoiceController extends Controller
                 );
         }
     }
+
+    public function addItemInvoice(Request $request): RedirectResponse
+    {
+        $collectionItem = collect();
+        $item = json([
+            'item' => $request->selectProduct,
+            'quantity' => $request->quantity,
+            'totalValue' => $request->selectProduct->price * $request->quantity
+        ]);
+        $collectionItem->add($item);
+    }
 }
