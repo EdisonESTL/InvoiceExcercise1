@@ -117,6 +117,9 @@ class InvoiceController extends Controller
         }
     }
 
+    /**
+     * Charge items an invoice
+     */
     public function addItemInvoice(Request $request): RedirectResponse
     {
         $collectionItem = collect();
