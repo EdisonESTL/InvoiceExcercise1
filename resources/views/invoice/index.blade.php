@@ -3,23 +3,25 @@
         <div class="content-center basis-4/5">
             <x-input-label :value="__('Facturar')" 
                 class="text-xl text-center"></x-input-label>
-            <div class="w-44">
-                <x-input-label :value="__('Fecha')" class="text-center"></x-input-label>
-                <x-text-input id="invoiceDate" 
-                    class="block mt-1 w-full" 
-                    type="date" 
-                    name="invoiceDate" 
-                    :value="old('invoiceDate')" 
-                    required autofocus autocomplete="invoiceDate" />
-                <x-input-error :messages="$errors->get('invoiceDate')" class="mt-2" />
-                
-            </div>
+            
         </div>
 
         <form method="POST" action="{{ route('invoice.store') }}"
         class="grid grid-cols-2 basis-4/5 gap-4">
             @csrf
+            
             <div class="content-center">
+                <div class="w-44 mx-auto">
+                    <x-input-label :value="__('Fecha')" class="text-center"></x-input-label>
+                    <x-text-input id="invoiceDate" 
+                        class="block mt-1 w-full" 
+                        type="date" 
+                        name="invoiceDate" 
+                        :value="old('invoiceDate')" 
+                        required autofocus autocomplete="invoiceDate" />
+                    <x-input-error :messages="$errors->get('invoiceDate')" class="mt-2" />
+                    
+                </div>
                 <x-input-label :value="__('Datos de la empresa')" 
                     class="text-xl p-4"></x-input-label>
 
@@ -123,30 +125,35 @@
                     
                 </div>
             </div>
+
             <div class="col-span-2 ">
-                <div class="w-3/4 mx-auto grid grid-cols-2 text-center">
+                <div class="w-1/3 mx-auto grid grid-cols-2 text-center">
                     <x-input-label :value="__('Añadir elementos a factura')" 
                         class="p-4 text-xl col-span-2"/>
-                    
-                    <select id="selectProduct" onchange="test(event)"
-                        name="selectProduct"
-                        class="m-4">
-                        <option value=0>select an option</option>
-                        @foreach($products as $product)
-                        <option value={{$product->id}}>{{$product->name}}</option>
-                        @endforeach
-                    </select>
-                    <td><x-text-input id="quantity" onchange="totalPayablePerProduct()"
-                        class="m-4" 
+                    <div class="p-4">
+                        <x-input-label :value="__('Articulo')"></x-input-label>
+                        <select id="selectProduct" onchange="test(event)"
+                        name="selectProduct">
+                            <option value=0>select an option</option>
+                            @foreach($products as $product)
+                            <option value={{$product->id}}>{{$product->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="p-4">
+                        <x-input-label :value="__('Cantidad')"></x-input-label>
+                        <x-text-input id="quantity" onchange="totalPayablePerProduct()"
+                         
                         type="number" 
                         name="quantity" 
-                        :value="old('quantity')"/></td>
+                        :value="old('quantity')"/>
+                    </div>
+                    
                     <button class="w-2/4 col-span-2 mx-auto" onclick="load(event)">Add</button>
                 </div>
             </div>
-            <div id="">
-            </div>
-            <table id="tablaItems" 
+
+            <table id="tablaItems" name="tablaItems"
                 class="col-span-2 table-auto p-4 mx-auto border-separate border border-slate-400">
                 <thead>
                     <tr>
@@ -158,10 +165,11 @@
                         <th class="p-2">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tablaItemsBody" class="text-center">     
+                <tbody id="tablaItemsBody" name="tablaItemsBody" class="text-center">     
                     
                 </tbody>
-                <tfoot id="tablaFooter">
+                <tfoot id="tablaFooter"
+                name="tablaFooter">
                     <tr>
                         <td colspan="4" class="text-right">Subtotal</td>
                         <td id="subTotal"></td>
@@ -186,11 +194,13 @@
                     <tr>
                         <td colspan="4" class="text-right">
                             <h4>Total</h4></td>
-                        <td id="totalInvoice">                            
+                        <td id="totalInvoice"
+                        name="totalInvoice">                            
                         </td>
                     </tr>
                 </tfoot>                
             </table>
+
             <div class="col-span-2 justify-center">
                 <x-primary-button class="mt-4 w-64">{{ __('Guardar') }}</x-primary-button>
                 <x-primary-button class="mt-4 w-64">{{ __('Imprimir') }}</x-primary-button>
@@ -237,13 +247,16 @@ async function totalPayablePerProduct(){
 }
 
 //create array
-    const arrayItems = [];
+const arrayItems = [];
+const copyArrayItems = [];
+
+var i = 0;
 
 //Charge item in list items of invoice
 async function load(evnt) {
     //
     evnt.preventDefault();
-    arrayItems.length=0;
+    //arrayItems.length=0;
 
     //select values of elements html
     const elementi = document.getElementById('selectProduct').value;
@@ -251,6 +264,7 @@ async function load(evnt) {
 
     //create object json
     var item = {
+        "id": i,
         "element": jsonDataProducts,
         "quantity": quantity,
         "unitTotal": jsonDataProducts.price * quantity
@@ -258,18 +272,89 @@ async function load(evnt) {
 
     //add object an array
     arrayItems.push(item);
+    copyArrayItems.push(item);
 
-    //select table for view items
-    //var tabla = document.getElementById('tablaItems');
+   //charge items an table
+   chargeTable();
 
+    //clear camps
+    document.getElementById('selectProduct').selectedIndex=0;
+    document.getElementById('quantity').value="";
+    
+    i += 1;
+}
+
+function addSubTotal(){
+    var addition = 0;
+    if(arrayItems.lenght!=0){
+        arrayItems.forEach(function(item){
+        addition += item.unitTotal;
+        })
+        
+        document.getElementById('subTotal').textContent=addition;
+    } else{
+        document.getElementById('subTotal').textContent=0;
+
+    }
+    
+}
+
+function discountSubtotal(){
+    var subtotal = document.getElementById('subTotal').textContent;    
+    var discnt = document.getElementById('discount').value;
+    document.getElementById('subtotalDiscount').textContent=subtotal-discnt;
+
+    ivaTotal();
+}
+
+function ivaTotal(event){
+    
+    var subtotal = parseFloat(document.getElementById('subtotalDiscount').textContent);
+    var ivaEcuador = 0.12;
+    var ivaValue = parseFloat(subtotal * ivaEcuador);
+    var total = ivaValue + subtotal;
+    document.getElementById('ivaTotal').textContent=ivaValue;
+    document.getElementById('totalInvoice').textContent=total;
+}
+
+function deleteItem(value){
+    
+    var itema = value.currentTarget.data.element;
+    //window.alert(value.currentTarget.data);
+    //console.log(itema);
+    //arrayItems
+    //var newList = arrayItems.splice(findIndex(x => x = value),1);
+    //var newList = arrayItems.filter(x => x.id = value.id);
+    //arrayItems = newList;
+    console.log('arrayItems.length funcncio delete');
+    console.log(arrayItems.length);
+    /*console.log('CopyArrayItems.length');
+    console.log(copyArrayItems.length);
+    copyArrayItems.forEach((itt) =>{
+        console.log(itt);
+
+    });*/
+    //var idx = copyArrayItems.findIndex(x => x.id === itema.id);
+    //console.log(idx);
+
+    arrayItems.splice(arrayItems.findIndex(x => x.element.id === itema.id),1);
+    arrayItems.forEach((itt) =>{
+        console.log(itt);
+
+    })
+    chargeTable();
+    //return false;
+}
+
+function chargeTable(){
     //select body table for view items
     var bodyTabla = document.getElementById("tablaItemsBody");
 
-    //create butoon delete element
-    var buttonDelete = document.createElement("button");
-    //trigger rows and cols
+    //clear table
+    bodyTabla.innerHTML = "";
+
+    //charge data
     arrayItems.forEach((elementt) => {
-        //console.log(elementt);
 
         //trigger row
         var fila = document.createElement("tr");
@@ -284,7 +369,7 @@ async function load(evnt) {
         fila.appendChild(celdaDescription);
 
         var celdaQuantity = document.createElement("td");
-        celdaQuantity.textContent = quantity;
+        celdaQuantity.textContent = elementt.quantity;
         fila.appendChild(celdaQuantity);
 
         var celdaPrice = document.createElement("td");
@@ -292,68 +377,26 @@ async function load(evnt) {
         fila.appendChild(celdaPrice);
 
         var celdaTotal = document.createElement("td");
-        celdaTotal.textContent = elementt.element.price * quantity;
+        celdaTotal.textContent = elementt.element.price * elementt.quantity;
         fila.appendChild(celdaTotal);
 
         var celdaOptions = document.createElement("td");
-        var btnDelete = document.createElement("button"); 
+        var btnDelete = document.createElement("button");
+        btnDelete.setAttribute("type", "button"); 
         btnDelete.textContent="Eliminar";  
-        btnDelete.onChange=deleteItem(elementt);     
+        btnDelete.data = elementt;
+        btnDelete.addEventListener("click",deleteItem, false);
+
         celdaOptions.appendChild(btnDelete);
         fila.appendChild(celdaOptions);
-        
+
         //add row to body table
         bodyTabla.appendChild(fila);
 
-    });
-
-    //clear camps
-    document.getElementById('selectProduct').selectedIndex=0;
-    document.getElementById('quantity').value="";
-
+        });
     //add sub total value
-    addSubTotal(arrayItems);  
+    addSubTotal();  
     discountSubtotal();
     ivaTotal();
 }
-
-var addition = 0;
-
-function addSubTotal(list){
-
-    list.forEach(function(item){
-        addition += item.unitTotal;
-    })
-    
-    document.getElementById('subTotal').textContent=addition;
-}
-
-function discountSubtotal(){
-    var subtotal = document.getElementById('subTotal').textContent;    
-    var discnt = document.getElementById('discount').value;
-    document.getElementById('subtotalDiscount').textContent=subtotal-discnt;
-
-    ivaTotal();
-}
-
-function ivaTotal(event){
-    
-    var subtotal = document.getElementById('subtotalDiscount').textContent;
-    var ivaEcuador = 0.12;
-    var ivaValue = subtotal * ivaEcuador;
-    var total = subtotal-ivaValue;
-    document.getElementById('ivaTotal').textContent=ivaValue;
-    document.getElementById('totalInvoice').textContent=total;
-}
-
-function deleteItem(value){
-    //value.preventDefault();
-    var id = value;
-    console.log(id);
-    //arrayItems
-    //var newList = arrayItems.splice(findIndex(x => x = value),1);
-    var newList = arrayItems.filter(x => x.id = value.id);
-    arrayItems = newList;
-}
-
 </script>

@@ -37,9 +37,11 @@ class InvoiceController extends Controller
     {
         //
         $invoice = Invoice::create([
-            'name' => $request->name,
-            'invoice_date' => $request->date
+            'total' => $request->totalInvoice,
+            'invoice_date' => $request->invoiceDate
         ]);
+
+        dd($request);
 
         //Guarda en tablas relacionadas
         foreach($request->items as $item) {
