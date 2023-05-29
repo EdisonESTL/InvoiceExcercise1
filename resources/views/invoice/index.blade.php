@@ -125,7 +125,7 @@
             </div>
             <div class="col-span-2 ">
                 <div class="w-3/4 mx-auto grid grid-cols-2 text-center">
-                    <x-input-label for="text" :value="__('Añadir elementos a factura')" 
+                    <x-input-label :value="__('Añadir elementos a factura')" 
                         class="p-4 text-xl col-span-2"/>
                     
                     <select id="selectProduct" onchange="test(event)"
@@ -161,28 +161,32 @@
                 <tbody id="tablaItemsBody" class="text-center">     
                     
                 </tbody>
-                <tfoot>
+                <tfoot id="tablaFooter">
                     <tr>
                         <td colspan="4" class="text-right">Subtotal</td>
-                        <td> $subto</td>
+                        <td id="subTotal"></td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">Descuento</td>
-                        <td> $desc</td>
+                        <td> <x-text-input id="discount" 
+                            class="block mt-1 w-full" 
+                            type="number" 
+                            name="discount" 
+                            step="0.01" min="1"
+                            onchange="discountSubtotal()" /></td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">Subtotal con descuento</td>
-                        <td> $subtdes</td>
+                        <td id="subtotalDiscount"> </td>
                     </tr>
                     <tr>
-                        <td colspan="4" class="text-right">Impuestos</td>
-                        <td> $imp</td>
+                        <td colspan="4" class="text-right">IVA</td>
+                        <td id="ivaTotal"> </td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">
                             <h4>Total</h4></td>
-                        <td>
-                            <h4>$total</h4>
+                        <td id="totalInvoice">                            
                         </td>
                     </tr>
                 </tfoot>                
@@ -220,11 +224,6 @@ async function test(data) {
         const dataProduct=jsonData.productDetails;
         jsonDataProducts=jsonData.productDetails;
 
-        //document.getElementById('description').value = dataProduct.description;
-        //document.getElementById('price').value = dataProduct.price;
-
-        console.log(jsonData.productDetails)
-        console.log(jsonDataProducts)
     }
     
 }
@@ -245,6 +244,7 @@ async function load(evnt) {
     //
     evnt.preventDefault();
     arrayItems.length=0;
+
     //select values of elements html
     const elementi = document.getElementById('selectProduct').value;
     const quantity = document.getElementById('quantity').value;
@@ -256,19 +256,21 @@ async function load(evnt) {
         "unitTotal": jsonDataProducts.price * quantity
     }
 
-    console.log(item);
     //add object an array
     arrayItems.push(item);
 
     //select table for view items
-    var tabla = document.getElementById('tablaItems');
-    //var bodyTabla = tabla.querySelector("bodyTabla");
+    //var tabla = document.getElementById('tablaItems');
+
     //select body table for view items
     var bodyTabla = document.getElementById("tablaItemsBody");
 
+    //create butoon delete element
+    var buttonDelete = document.createElement("button");
     //trigger rows and cols
     arrayItems.forEach((elementt) => {
-        console.log(elementt);
+        //console.log(elementt);
+
         //trigger row
         var fila = document.createElement("tr");
 
@@ -293,20 +295,65 @@ async function load(evnt) {
         celdaTotal.textContent = elementt.element.price * quantity;
         fila.appendChild(celdaTotal);
 
+        var celdaOptions = document.createElement("td");
+        var btnDelete = document.createElement("button"); 
+        btnDelete.textContent="Eliminar";  
+        btnDelete.onChange=deleteItem(elementt);     
+        celdaOptions.appendChild(btnDelete);
+        fila.appendChild(celdaOptions);
+        
         //add row to body table
         bodyTabla.appendChild(fila);
 
-        //clear camps
-        document.getElementById('selectProduct').selectedIndex=0;
-        document.getElementById('quantity').value="";
-
-        //console.log(elementt);
-        console.log(fila);
     });
-    
-    var subTotal = arrayItems.reduce((acumulador, obj) => acumulador + obj.unitTotal, 0);
-    console.log(subTotal);
+
+    //clear camps
+    document.getElementById('selectProduct').selectedIndex=0;
+    document.getElementById('quantity').value="";
+
+    //add sub total value
+    addSubTotal(arrayItems);  
+    discountSubtotal();
+    ivaTotal();
 }
 
-   
+var addition = 0;
+
+function addSubTotal(list){
+
+    list.forEach(function(item){
+        addition += item.unitTotal;
+    })
+    
+    document.getElementById('subTotal').textContent=addition;
+}
+
+function discountSubtotal(){
+    var subtotal = document.getElementById('subTotal').textContent;    
+    var discnt = document.getElementById('discount').value;
+    document.getElementById('subtotalDiscount').textContent=subtotal-discnt;
+
+    ivaTotal();
+}
+
+function ivaTotal(event){
+    
+    var subtotal = document.getElementById('subtotalDiscount').textContent;
+    var ivaEcuador = 0.12;
+    var ivaValue = subtotal * ivaEcuador;
+    var total = subtotal-ivaValue;
+    document.getElementById('ivaTotal').textContent=ivaValue;
+    document.getElementById('totalInvoice').textContent=total;
+}
+
+function deleteItem(value){
+    //value.preventDefault();
+    var id = value;
+    console.log(id);
+    //arrayItems
+    //var newList = arrayItems.splice(findIndex(x => x = value),1);
+    var newList = arrayItems.filter(x => x.id = value.id);
+    arrayItems = newList;
+}
+
 </script>
