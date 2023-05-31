@@ -6,7 +6,7 @@
             
         </div>
 
-        <form method="POST" action="{{ route('invoice.store') }}"
+        <form
         name="mainForm"
         id="mainForm"
         class="grid grid-cols-2 basis-4/5 gap-4">
@@ -251,7 +251,7 @@ async function totalPayablePerProduct(){
 //create array
 const arrayItems = [];
 const copyArrayItems = [];
-
+let mainForm = document.getElementById("mainForm");
 var i = 0;
 
 //Charge item in list items of invoice
@@ -402,13 +402,28 @@ function chargeTable(){
     ivaTotal();
 }
 
-var form = document.getElementById('mainForm');
-// Crea un campo oculto
-var inputObjetos = document.createElement('input');
-inputObjetos.type = 'hidden';
-inputObjetos.valueItems = JSON.stringify(arrayItems);
+function saveInvoice(event){
+    //console.log('hola ');
+    event.preventDefault();
+    var form = document.getElementById('mainForm');
+    var formData = new FormData(form);
+    console.log(formData);
+    
+    //var form = document.getElementById('mainForm');
+    // Crea un campo oculto
+    //var inputObjetos = document.createElement('input');
+    //inputObjetos.type = 'hidden';
+    //inputObjetos.valueItems = JSON.stringify(arrayItems);
 
-// Agrega el campo oculto al formulario
-form.appendChild(inputObjetos);
+    // Agrega el campo oculto al formulario
+    //form.appendChild(inputObjetos);
+    return false;
+}
+mainForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    var form = document.getElementById('mainForm');
+    var formData = new FormData(form);
+    console.log(formData);
+});
 
 </script>
