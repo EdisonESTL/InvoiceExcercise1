@@ -7,6 +7,8 @@
         </div>
 
         <form method="POST" action="{{ route('invoice.store') }}"
+        name="mainForm"
+        id="mainForm"
         class="grid grid-cols-2 basis-4/5 gap-4">
             @csrf
             
@@ -18,7 +20,7 @@
                         type="date" 
                         name="invoiceDate" 
                         :value="old('invoiceDate')" 
-                        required autofocus autocomplete="invoiceDate" />
+                        autofocus autocomplete="invoiceDate" />
                     <x-input-error :messages="$errors->get('invoiceDate')" class="mt-2" />
                     
                 </div>
@@ -32,7 +34,7 @@
                         type="text" 
                         name="nameCompany" 
                         :value="old('nameCompany')" 
-                        required autofocus autocomplete="nameCompany" />
+                        autofocus autocomplete="nameCompany" />
                     <x-input-error :messages="$errors->get('nameCompany')" class="mt-2" />
                     
                 </div>
@@ -44,7 +46,7 @@
                         type="text" 
                         name="directionCompany" 
                         :value="old('directionCompany')" 
-                        required autofocus autocomplete="directionCompany" />
+                        autofocus autocomplete="directionCompany" />
                     <x-input-error :messages="$errors->get('directionCompany')" class="mt-2" />
                     
                 </div>
@@ -56,7 +58,7 @@
                         type="number" 
                         name="telephoneCompany" 
                         :value="old('telephoneCompany')" 
-                        required autofocus autocomplete="telephoneCompany" />
+                        autofocus autocomplete="telephoneCompany" />
                     <x-input-error :messages="$errors->get('telephoneCompany')" class="mt-2" />
                     
                 </div>
@@ -72,7 +74,7 @@
                         type="text" 
                         name="nameCustomer" 
                         :value="old('nameCustomer')" 
-                        required autofocus autocomplete="nameCustomer" />
+                        autofocus autocomplete="nameCustomer" />
                     <x-input-error :messages="$errors->get('nameCustomer')" class="mt-2" />
                     
                 </div>
@@ -84,7 +86,7 @@
                         type="text" 
                         name="nameCompanyClient" 
                         :value="old('nameCompanyClient')" 
-                        required autofocus autocomplete="nameCompanyClient" />
+                        autofocus autocomplete="nameCompanyClient" />
                     <x-input-error :messages="$errors->get('nameCompanyClient')" class="mt-2" />
                     
                 </div>
@@ -96,7 +98,7 @@
                         type="text" 
                         name="directionCustomer" 
                         :value="old('directionCustomer')" 
-                        required autofocus autocomplete="directionCustomer" />
+                        autofocus autocomplete="directionCustomer" />
                     <x-input-error :messages="$errors->get('directionCustomer')" class="mt-2" />
                     
                 </div>
@@ -108,7 +110,7 @@
                         type="number" 
                         name="telephoneCustomer" 
                         :value="old('telephoneCustomer')" 
-                        required autofocus autocomplete="telephoneCustomer" />
+                        autofocus autocomplete="telephoneCustomer" />
                     <x-input-error :messages="$errors->get('telephoneCustomer')" class="mt-2" />
                     
                 </div>
@@ -120,7 +122,7 @@
                         type="number" 
                         name="emailCustomer" 
                         :value="old('emailCustomer')" 
-                        required autofocus autocomplete="emailCustomer" />
+                        autofocus autocomplete="emailCustomer" />
                     <x-input-error :messages="$errors->get('emailCustomer')" class="mt-2" />
                     
                 </div>
@@ -172,7 +174,7 @@
                 name="tablaFooter">
                     <tr>
                         <td colspan="4" class="text-right">Subtotal</td>
-                        <td id="subTotal"></td>
+                        <td id="subTotal" name="subTotal"></td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">Descuento</td>
@@ -185,11 +187,11 @@
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">Subtotal con descuento</td>
-                        <td id="subtotalDiscount"> </td>
+                        <td id="subtotalDiscount" name="subtotalDiscount"> </td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">IVA</td>
-                        <td id="ivaTotal"> </td>
+                        <td id="ivaTotal" name="ivaTotal"> </td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right">
@@ -399,4 +401,14 @@ function chargeTable(){
     discountSubtotal();
     ivaTotal();
 }
+
+var form = document.getElementById('mainForm');
+// Crea un campo oculto
+var inputObjetos = document.createElement('input');
+inputObjetos.type = 'hidden';
+inputObjetos.valueItems = JSON.stringify(arrayItems);
+
+// Agrega el campo oculto al formulario
+form.appendChild(inputObjetos);
+
 </script>

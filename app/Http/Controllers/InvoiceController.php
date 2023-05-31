@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\InvoiceLineItem;
 
 class InvoiceController extends Controller
 {
@@ -35,16 +36,17 @@ class InvoiceController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        dd($request->all());
         //
-        $invoice = Invoice::create([
+        /*$invoice = Invoice::create([
             'total' => $request->totalInvoice,
-            'invoice_date' => $request->invoiceDate
-        ]);
+            //'invoice_date' => $request->invoiceDate
+        ]);*/
 
-        dd($request);
+        
 
         //Guarda en tablas relacionadas
-        foreach($request->items as $item) {
+       /* foreach($request->tablaItemsBody as $item) {
             /*[
                 'product_id' => 1,
                 'service_id' => 1,
@@ -52,18 +54,15 @@ class InvoiceController extends Controller
                 'total_price' => 100,
                 'quantity' => 10
             ];
-            $table->integer('quantity');
-            $table->foreignId('invoice_id');
-            $table->foreignId('product_id');
-            $table->foreignId('service_id');
-            $table->foreignId('state_id');
-            $table->decimal('unit_price', $precision = 8, $scale = 2);
-            $table->decimal('total_price', $precision = 8, $scale = 2);*/
+            /*var itemList = new InvoiceLineItem {
+                'idInvoice' => $invoice.id;
+
+            }
             $invoice->invoiceLineItems()->create($item);    
-        }
+        }*/
         
 
-        return redirect(route('invoice.index'));
+        //return redirect(route('invoice.index'));
     }
 
     /**
