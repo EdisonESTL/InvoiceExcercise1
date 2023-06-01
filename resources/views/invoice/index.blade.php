@@ -419,6 +419,7 @@ function saveInvoice(event){
     //form.appendChild(inputObjetos);
     return false;
 }
+
 mainForm.addEventListener("submit", (e) => {
     e.preventDefault();
     var form = document.getElementById('mainForm');
