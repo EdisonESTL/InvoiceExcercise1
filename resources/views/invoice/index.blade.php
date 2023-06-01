@@ -420,22 +420,28 @@ function saveInvoice(event){
     return false;
 }
 
+var token = document.head.querySelector("[name~=csrf-token][content]").content;
+
 mainForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    //console.log(token);
     var form = document.getElementById('mainForm');
-    //var formData = new FormData(form);
+    // Obtener el token de la etiqueta meta
+    
+    var invoice_date = document.getElementById('invoiceDate').value;
     var customer_name = document.getElementById('nameCustomer').value;
     var customer_direction = document.getElementById('directionCustomer').value;
     var customer_telephone = document.getElementById('telephoneCustomer').value;
     var customer_mail = document.getElementById('emailCustomer').value;
     var invoice_items = arrayItems;
-    var invoice_subtotal = document.getElementById('subTotal').value;
-    var invoice_discount = document.getElementById('discount').value;
-    var invoice_subtotaldisc = document.getElementById('subtotalDiscount').value;
-    var invoice_iva = document.getElementById('ivaTotal').value;
-    var invoice_total = document.getElementById('totalInvoice').value;
+    var invoice_subtotal = document.getElementById('subTotal').textContent;
+    var invoice_discount = document.getElementById('discount').textContent;
+    var invoice_subtotaldisc = document.getElementById('subtotalDiscount').textContent;
+    var invoice_iva = document.getElementById('ivaTotal').textContent;
+    var invoice_total = document.getElementById('totalInvoice').textContent;
     
     var datas = {
+        invoice_date: invoice_date,
         customer_namep: customer_name,
         customer_directionp: customer_direction,
         customer_telephonep: customer_telephone,
@@ -447,14 +453,29 @@ mainForm.addEventListener("submit", (e) => {
         invoice_ivap: invoice_iva,
         invoice_totalp: invoice_total
     };
-
+    console.log('datas');
     console.log(datas);
-    fetch('invoice.store', {
+    //console.log(datas);
+    fetch('/invoice', {
         method: 'POST', 
+        headers:{
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': token
+        },
         body:{ 
-            JSON.stringify(datas)
+            data: datas
         }
-    });
+    }).then(response => response.json())
+  .then(data  => {
+    // Hacer algo con la respuesta
+    console.log(data);
+    console.log('datas');
+    console.log(datas);
+  })
+  .catch(error => {
+    // Manejar errores
+    console.error('Error:', error);
+  });
 })
 
 </script>

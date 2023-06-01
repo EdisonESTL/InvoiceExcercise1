@@ -15,7 +15,8 @@ class Invoice extends Model
     protected $fillable = [
         'name',
         'user_id',
-        'invoice_date'
+        'invoice_date',
+        'total'
     ];
 
     public function invoiceLineItems(): HasMany

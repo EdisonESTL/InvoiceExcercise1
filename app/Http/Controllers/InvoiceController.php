@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use App\Models\Invoice;
 use App\Models\Product;
+use App\Models\ProInvoiceduct;
 use Illuminate\Http\Request;
 use App\Models\InvoiceLineItem;
 
@@ -34,17 +36,18 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        return 'solicitud si llego';
-        dd($request->all());
+        //return 'solicitud si llego';
+        //dd($request->all());
         //
-        /*$invoice = Invoice::create([
-            'total' => $request->totalInvoice,
-            //'invoice_date' => $request->invoiceDate
-        ]);*/
+        return response()->json($request->all());
+        $invoice = Invoice::create([
+            'total' => $request->invoice_totalp,
+            'invoice_date' => $request->invoice_date
+        ]);
 
-        
+                
 
         //Guarda en tablas relacionadas
        /* foreach($request->tablaItemsBody as $item) {
@@ -64,6 +67,22 @@ class InvoiceController extends Controller
         
 
         //return redirect(route('invoice.index'));
+        // Procesa los datos recibidos del cliente
+
+    // Obtén el valor que deseas retornar
+    //$valor = "¡Hola desde el controlador 2!";
+
+    // Crea un array con el valor
+    /*$data = [
+        'resultado' => $valor
+    ];*/
+
+    //$elementtoo = new Invoice;
+
+    //$elementtoo->invoice_date= $request->
+
+    // Retorna la respuesta JSON
+    return response()->json(['mensaje' => $request]);
     }
 
     /**
