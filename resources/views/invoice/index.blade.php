@@ -79,7 +79,7 @@
                     
                 </div>
     
-                <div>
+                <!--<div>
                     <x-input-label :value="__('Nombre empresa')"></x-input-label>
                     <x-text-input id="nameCompanyClient" 
                         class="block mt-1 w-full" 
@@ -89,7 +89,7 @@
                         autofocus autocomplete="nameCompanyClient" />
                     <x-input-error :messages="$errors->get('nameCompanyClient')" class="mt-2" />
                     
-                </div>
+                </div>-->
     
                 <div>
                     <x-input-label :value="__('Dirección')"></x-input-label>
@@ -328,8 +328,8 @@ function deleteItem(value){
     //var newList = arrayItems.splice(findIndex(x => x = value),1);
     //var newList = arrayItems.filter(x => x.id = value.id);
     //arrayItems = newList;
-    console.log('arrayItems.length funcncio delete');
-    console.log(arrayItems.length);
+    //console.log('arrayItems.length funcncio delete');
+    //console.log(arrayItems.length);
     /*console.log('CopyArrayItems.length');
     console.log(copyArrayItems.length);
     copyArrayItems.forEach((itt) =>{
@@ -422,8 +422,38 @@ function saveInvoice(event){
 mainForm.addEventListener("submit", (e) => {
     e.preventDefault();
     var form = document.getElementById('mainForm');
-    var formData = new FormData(form);
-    console.log(formData);
-});
+    //var formData = new FormData(form);
+    var customer_name = document.getElementById('nameCustomer').value;
+    var customer_direction = document.getElementById('directionCustomer').value;
+    var customer_telephone = document.getElementById('telephoneCustomer').value;
+    var customer_mail = document.getElementById('emailCustomer').value;
+    var invoice_items = arrayItems;
+    var invoice_subtotal = document.getElementById('subTotal').value;
+    var invoice_discount = document.getElementById('discount').value;
+    var invoice_subtotaldisc = document.getElementById('subtotalDiscount').value;
+    var invoice_iva = document.getElementById('ivaTotal').value;
+    var invoice_total = document.getElementById('totalInvoice').value;
+    
+    var datas = {
+        customer_namep: customer_name,
+        customer_directionp: customer_direction,
+        customer_telephonep: customer_telephone,
+        customer_mailp: customer_mail,
+        invoice_itemsp: invoice_items,
+        invoice_subtotalp: invoice_subtotal,
+        invoice_discountp: invoice_discount,
+        invoice_subtotaldiscp: invoice_subtotaldisc,
+        invoice_ivap: invoice_iva,
+        invoice_totalp: invoice_total
+    };
+
+    console.log(datas);
+    fetch('invoice.store', {
+        method: 'POST', 
+        body:{ 
+            JSON.stringify(datas)
+        }
+    });
+})
 
 </script>

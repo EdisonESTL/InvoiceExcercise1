@@ -36,6 +36,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        return 'solicitud si llego';
         dd($request->all());
         //
         /*$invoice = Invoice::create([
