@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Models\State;
 use Illuminate\Http\Request;
 
@@ -10,9 +12,12 @@ class StateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         //
+        return view('state.index',[
+            'states' => State::all(),
+        ]);
     }
 
     /**
@@ -26,9 +31,14 @@ class StateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //
+        $statee = State::create([
+            'name' => $request->nameState,
+            'description' => $request->descriptionSate
+        ]);
+        return redirect(route('state.index'));
     }
 
     /**

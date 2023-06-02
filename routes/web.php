@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,4 +54,8 @@ Route::post('productDataFilling', [InvoiceController::class, 'productDataFilling
 Route::post('addItemInvoice', [InvoiceController::class, 'addItemInvoice'])
     ->middleware('auth','verified');
 
+Route::resource('state', StateController::class)
+    ->only(['index','store', 'edit', 'update', 'destroy'])
+    ->middleware('auth','verified');
+    
 require __DIR__.'/auth.php';

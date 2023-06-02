@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('state_id');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('state_id')->constrained('states');
             $table->dateTime('invoice_date', $precision = 0) ;
             $table->decimal('total', $precision = 8, $scale = 2);
             $table->timestamps();

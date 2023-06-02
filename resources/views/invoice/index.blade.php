@@ -6,24 +6,38 @@
             
         </div>
 
-        <form
+        <form onsubmit="postJSON"
         name="mainForm"
         id="mainForm"
         class="grid grid-cols-2 basis-4/5 gap-4">
             @csrf
             
             <div class="content-center">
-                <div class="w-44 mx-auto">
-                    <x-input-label :value="__('Fecha')" class="text-center"></x-input-label>
-                    <x-text-input id="invoiceDate" 
-                        class="block mt-1 w-full" 
-                        type="date" 
-                        name="invoiceDate" 
-                        :value="old('invoiceDate')" 
-                        autofocus autocomplete="invoiceDate" />
-                    <x-input-error :messages="$errors->get('invoiceDate')" class="mt-2" />
-                    
+                <div class="flex">
+                    <div class="w-44 p-4">
+                        <x-input-label :value="__('Fecha')" class="text-center"></x-input-label>
+                        <x-text-input id="invoiceDate" 
+                            class="block mt-1 w-full" 
+                            type="date" 
+                            name="invoiceDate" 
+                            :value="old('invoiceDate')" 
+                            autofocus autocomplete="invoiceDate" />
+                        <x-input-error :messages="$errors->get('invoiceDate')" class="mt-2" />
+                        
+                    </div>
+                    <div class="w-44 p-4">
+                        <x-input-label :value="__('State invoice')"></x-input-label>
+                        <select id="selectState"
+                        name="selectState">
+                            <option value=0>select an option</option>
+                            @foreach($states as $stat)
+                            <option value={{$stat->id}}>{{$stat->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
+                
+                
                 <x-input-label :value="__('Datos de la empresa')" 
                     class="text-xl p-4"></x-input-label>
 
@@ -119,7 +133,7 @@
                     <x-input-label :value="__('Correo')"></x-input-label>
                     <x-text-input id="emailCustomer" 
                         class="block mt-1 w-full" 
-                        type="number" 
+                        type="mail" 
                         name="emailCustomer" 
                         :value="old('emailCustomer')" 
                         autofocus autocomplete="emailCustomer" />
@@ -322,22 +336,6 @@ function ivaTotal(event){
 function deleteItem(value){
     
     var itema = value.currentTarget.data.element;
-    //window.alert(value.currentTarget.data);
-    //console.log(itema);
-    //arrayItems
-    //var newList = arrayItems.splice(findIndex(x => x = value),1);
-    //var newList = arrayItems.filter(x => x.id = value.id);
-    //arrayItems = newList;
-    //console.log('arrayItems.length funcncio delete');
-    //console.log(arrayItems.length);
-    /*console.log('CopyArrayItems.length');
-    console.log(copyArrayItems.length);
-    copyArrayItems.forEach((itt) =>{
-        console.log(itt);
-
-    });*/
-    //var idx = copyArrayItems.findIndex(x => x.id === itema.id);
-    //console.log(idx);
 
     arrayItems.splice(arrayItems.findIndex(x => x.element.id === itema.id),1);
     arrayItems.forEach((itt) =>{
@@ -424,58 +422,39 @@ var token = document.head.querySelector("[name~=csrf-token][content]").content;
 
 mainForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    //console.log(token);
-    var form = document.getElementById('mainForm');
-    // Obtener el token de la etiqueta meta
-    
-    var invoice_date = document.getElementById('invoiceDate').value;
-    var customer_name = document.getElementById('nameCustomer').value;
-    var customer_direction = document.getElementById('directionCustomer').value;
-    var customer_telephone = document.getElementById('telephoneCustomer').value;
-    var customer_mail = document.getElementById('emailCustomer').value;
-    var invoice_items = arrayItems;
-    var invoice_subtotal = document.getElementById('subTotal').textContent;
-    var invoice_discount = document.getElementById('discount').textContent;
-    var invoice_subtotaldisc = document.getElementById('subtotalDiscount').textContent;
-    var invoice_iva = document.getElementById('ivaTotal').textContent;
-    var invoice_total = document.getElementById('totalInvoice').textContent;
-    
-    var datas = {
-        invoice_date: invoice_date,
-        customer_namep: customer_name,
-        customer_directionp: customer_direction,
-        customer_telephonep: customer_telephone,
-        customer_mailp: customer_mail,
-        invoice_itemsp: invoice_items,
-        invoice_subtotalp: invoice_subtotal,
-        invoice_discountp: invoice_discount,
-        invoice_subtotaldiscp: invoice_subtotaldisc,
-        invoice_ivap: invoice_iva,
-        invoice_totalp: invoice_total
-    };
-    console.log('datas');
-    console.log(datas);
-    //console.log(datas);
-    fetch('/invoice', {
-        method: 'POST', 
-        headers:{
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': token
-        },
-        body:{ 
-            data: datas
-        }
-    }).then(response => response.json())
-  .then(data  => {
-    // Hacer algo con la respuesta
-    console.log(data);
-    console.log('datas');
-    console.log(datas);
-  })
-  .catch(error => {
-    // Manejar errores
-    console.error('Error:', error);
-  });
-})
+    postJSON();
+});
 
+async function postJSON() {
+  try {
+    var dataPostJson = {
+        invoice_date: document.getElementById('invoiceDate').value,
+        invoice_state: document.getElementById('selectState').value,
+        customer_namep: document.getElementById('nameCustomer').value,
+        customer_directionp: document.getElementById('directionCustomer').value,
+        customer_telephonep: document.getElementById('telephoneCustomer').value,
+        customer_mailp: document.getElementById('emailCustomer').value,
+        invoice_itemsp: arrayItems,
+        invoice_subtotalp: document.getElementById('subTotal').textContent,
+        invoice_discountp: document.getElementById('discount').textContent,
+        invoice_subtotaldiscp: document.getElementById('subtotalDiscount').textContent,
+        invoice_ivap: document.getElementById('ivaTotal').textContent,
+        invoice_totalp: document.getElementById('totalInvoice').textContent
+    }
+    //console.log(dataPostJson);
+    var response = await fetch('/invoice', {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+        'X-CSRF-Token': token
+      },
+      body: JSON.stringify(dataPostJson),
+    })
+
+    var result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 </script>

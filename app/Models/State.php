@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class State extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'name',
+        'description'
+    ];
     //relation inverse
     public function invoicelineitem(): BelongsTo
     {

@@ -6,10 +6,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use App\Models\Invoice;
+use App\Models\State;
 use App\Models\Product;
 use App\Models\ProInvoiceduct;
 use Illuminate\Http\Request;
 use App\Models\InvoiceLineItem;
+//use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -22,6 +25,7 @@ class InvoiceController extends Controller
         
         return view('invoice.index', [
             'products' => Product::All(),
+            'states' => State::All()
         ]);
     }
 
@@ -41,13 +45,12 @@ class InvoiceController extends Controller
         //return 'solicitud si llego';
         //dd($request->all());
         //
-        return response()->json($request->all());
-        $invoice = Invoice::create([
-            'total' => $request->invoice_totalp,
-            'invoice_date' => $request->invoice_date
-        ]);
-
-                
+        /*$invoice = Invoice::create([
+            'name' => "controlles",
+            'user_id' => 2,
+            'total' => json($request->invoice_totalp),
+            'invoice_date' => json($request->invoice_date)
+        ]);*/
 
         //Guarda en tablas relacionadas
        /* foreach($request->tablaItemsBody as $item) {
@@ -82,8 +85,21 @@ class InvoiceController extends Controller
     //$elementtoo->invoice_date= $request->
 
     // Retorna la respuesta JSON
-    return response()->json(['mensaje' => $request]);
-    }
+    //return response()->json(['mensaje' => "se guardo"]);
+    $puserr = Auth::id();
+    
+    $invoicep = Invoice::create([
+        'user_id' => $puserr,
+        'state_id'=> $request->selectState,
+        'total' => $request->invoice_totalp,
+        'invoice_date' => $request->invoice_date
+    
+    ]);
+    $invoicep->state()->create($request->invoice_state);
+    //$invoicep->user()->puserr;
+    return response()->json($request->all());
+
+}
 
     /**
      * Display the specified resource.
