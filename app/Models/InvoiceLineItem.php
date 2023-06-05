@@ -11,6 +11,15 @@ class InvoiceLineItem extends Model
 {
     use HasFactory;
 
+    protected $filliable = [
+        'quantity',
+        'invoice_id',
+        'product_id',
+        //'service_id',
+        'state_id',
+        'unit_price',
+        'total_price'
+    ];
     //inverse relation
     public function invoice(): BelongsTo
     {

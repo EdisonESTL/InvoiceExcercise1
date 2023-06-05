@@ -14,8 +14,8 @@ class State extends Model
         'description'
     ];
     //relation inverse
-    public function invoicelineitem(): BelongsTo
+    public function invoice(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(invoice::class);
     }
 }

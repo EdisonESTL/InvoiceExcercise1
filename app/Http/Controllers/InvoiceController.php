@@ -86,17 +86,28 @@ class InvoiceController extends Controller
 
     // Retorna la respuesta JSON
     //return response()->json(['mensaje' => "se guardo"]);
-    $puserr = Auth::id();
+    $puserr = $request->user()->id;
     
     $invoicep = Invoice::create([
         'user_id' => $puserr,
-        'state_id'=> $request->selectState,
+        'state_id'=> $request->invoice_state,
         'total' => $request->invoice_totalp,
         'invoice_date' => $request->invoice_date
     
     ]);
-    $invoicep->state()->create($request->invoice_state);
+    //Guarda en tablas relacionadas
+       foreach($request->invoice_itemsp as $item){
+            $invoicep->invoiceLineItems()->create($item);
+       }
+    //$invoicep->state()->create($request->invoice_state);
     //$invoicep->user()->puserr;
+    /*$invoiceN = new Invoice;
+    $invoiceN->invoice_date = $request->invoice_date;
+    $invoiceN->total = $request->invoice_totalp;
+    $invoiceN->save();*/
+
+    //$request->user()->invoice()->create($invoiceN);
+
     return response()->json($request->all());
 
 }

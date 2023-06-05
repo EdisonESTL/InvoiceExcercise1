@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->foreignId('invoice_id');
             $table->foreignId('product_id');
-            $table->foreignId('service_id');
+            //$table->foreignId('service_id');
             $table->foreignId('state_id');
             $table->double('unit_price', 8, 2);
             $table->double('total_price', 8, 2);

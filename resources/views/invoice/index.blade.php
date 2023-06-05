@@ -453,8 +453,34 @@ async function postJSON() {
 
     var result = await response.json();
     console.log("Success:", result);
+    clearing();
+    alert("Save!");
+
   } catch (error) {
     console.log("Error:", error);
   }
+}
+
+function clearing(){
+    //clear camps
+    document.getElementById('invoiceDate').value=""
+    document.getElementById('selectState').selectedIndex=0;
+    document.getElementById('nameCompany').value="";
+    document.getElementById('directionCompany').value="";
+    document.getElementById('telephoneCompany').value="";
+    document.getElementById('nameCustomer').value="";
+    document.getElementById('directionCustomer').value="";
+    document.getElementById('telephoneCustomer').value="";
+    document.getElementById('emailCustomer').value = "";
+    document.getElementById('selectProduct').selectedIndex=0;
+    document.getElementById('quantity').value="";
+    document.getElementById("tablaItemsBody").innerHTML="";
+    
+    arrayItems.splice(0);
+    document.getElementById('subTotal').textContent="";
+    document.getElementById('discount').textContent="";
+    document.getElementById('subtotalDiscount').textContent="";
+    document.getElementById('ivaTotal').textContent="";
+    document.getElementById('totalInvoice').textContent="";
 }
 </script>
