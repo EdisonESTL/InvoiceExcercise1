@@ -96,9 +96,9 @@ class InvoiceController extends Controller
     
     ]);
     //Guarda en tablas relacionadas
-       foreach($request->invoice_itemsp as $item){
+       /*foreach($request->invoice_itemsp as $item){
             $invoicep->invoiceLineItems()->create($item);
-       }
+       }*/
     //$invoicep->state()->create($request->invoice_state);
     //$invoicep->user()->puserr;
     /*$invoiceN = new Invoice;

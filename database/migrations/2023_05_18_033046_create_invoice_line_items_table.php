@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('invoice_line_items', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
-            $table->foreignId('invoice_id');
-            $table->foreignId('product_id');
+            $table->foreignId('invoice_id')->constrained('invoices');
+            $table->foreignId('product_id')->constrained('products');
             //$table->foreignId('service_id');
-            $table->foreignId('state_id');
+            //$table->foreignId('state_id');
             $table->double('unit_price', 8, 2);
             $table->double('total_price', 8, 2);
             $table->timestamps();

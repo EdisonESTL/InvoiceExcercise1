@@ -13,7 +13,8 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'price'
+        'price',
+        'invoice_line_items_products_id'
     ];
 
     //relation inverse

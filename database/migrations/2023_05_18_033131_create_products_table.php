@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('name');
             $table->text('description');
             $table->double('price', 8, 2);
+            $table->foreignId('invoice_line_items_products_id')->constrained('invoice_line_items');
             $table->timestamps();
         });
     }

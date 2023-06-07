@@ -16,7 +16,7 @@ class InvoiceLineItem extends Model
         'invoice_id',
         'product_id',
         //'service_id',
-        'state_id',
+        //'state_id',
         'unit_price',
         'total_price'
     ];
@@ -33,8 +33,8 @@ class InvoiceLineItem extends Model
     }
 
     //relation with Service
-    public function service(): HasOne
+    /*public function service(): HasOne
     {
         return $this->hasOne(Service::class);
-    }
+    }*/
 }
